@@ -1,0 +1,111 @@
+/* Container for the whole result area */
+.analysis-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px 0;
+  width: 100%;
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Common Card Styles */
+.card {
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.card-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Summary Specifics */
+.summary-card {
+  background-color: #f8f9fa;
+  border-left: 5px solid #6c757d;
+}
+
+.summary-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #333;
+  margin: 0;
+}
+
+/* Red Flags (Danger) Specifics */
+.danger-card {
+  background-color: #fff5f5; /* Light Red */
+  border: 1px solid #feb2b2;
+  border-left: 5px solid #e53e3e;
+}
+
+.danger-card .card-title {
+  color: #c53030;
+}
+
+/* Good Points (Success) Specifics */
+.success-card {
+  background-color: #f0fff4; /* Light Green */
+  border: 1px solid #9ae6b4;
+  border-left: 5px solid #38a169;
+}
+
+.success-card .card-title {
+  color: #2f855a;
+}
+
+/* Lists */
+.list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.list li {
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  color: #4a5568;
+}
+
+.list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Badges (the number count) */
+.badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: white;
+  margin-left: auto; /* Pushes badge to the right */
+}
+
+.badge.danger {
+  background-color: #e53e3e;
+}
+
+.badge.success {
+  background-color: #38a169;
+}
+
+/* Empty State Text */
+.empty-state {
+  font-size: 0.85rem;
+  color: #718096;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Simple Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
