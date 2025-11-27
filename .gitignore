@@ -12,6 +12,7 @@ dist
 dist-ssr
 
 # Local environment
+icon.png
 .env
 server/.env
 *.local
