@@ -11,11 +11,17 @@ const app = express()
 app.use(cors());
 app.use(express.json());
 
+if (!process.env.API_KEY) {
+    console.error("Missing OpenRouter API key");
+    process.exit(1);
+}
+
 const openrouter   = new OpenRouter({
   apiKey: process.env.API_KEY
 });
 
 app.post('/api/analyze', async(req,res) =>{
+    console.log(`Recevied Req for ${req.body}`);
     try{
         const { text } = req.body;
         // const text = `What you can do. Subject to your compliance with these Terms, you may access and use our Services. In using our Services, you must comply with all applicable laws as well as our Sharing & Publication Policy⁠, Usage Policies⁠, and any other documentation, guidelines, or policies we make available to you.
@@ -45,7 +51,7 @@ app.post('/api/analyze', async(req,res) =>{
         `;
 
         const result = await openrouter.chat.send({
-            model: "x-ai/grok-4.1-fast:free",
+            model: "liquid/lfm-2.5-1.2b-thinking:free",
             messages: [
                 { role: "user", content: prompt }
                 ]           

@@ -15,7 +15,7 @@ This Chrome extension extracts text from the current webpage, sends it to a loca
 ## 🚀 Features
 
 * 🔍 **Extracts webpage content** (from `<main>` / `<article>` / `body`)
-* 🤖 **AI-powered analysis** using the OpenRouter API (Grok 4.1 Fast)
+* 🤖 **AI-powered analysis** using the OpenRouter API (lfm-2.5-1.2b-thinking)
 * 🧹 **Cleans & limits text** before sending (max 120k chars)
 * 📦 **Chrome Manifest V3** extension
 * ⚛️ **React-based popup UI** with Tailwind + Styled Components
@@ -84,7 +84,7 @@ fetch("http://localhost:3000/api/analyze")
 
 ### **3️⃣ Backend (Node.js) calls OpenRouter AI**
 
-Model: `x-ai/grok-4.1-fast:free`
+Model: `liquid/lfm-2.5-1.2b-thinking:free`
 
 Returns strict JSON:
 
