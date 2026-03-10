@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const port= 3000;
+const port = process.env.PORT || 3000;
 const app = express()
 
 app.use(cors());
@@ -21,7 +21,7 @@ const openrouter   = new OpenRouter({
 });
 
 app.post('/api/analyze', async(req,res) =>{
-    console.log(`Recevied Req for ${req.body}`);
+    console.log("Received Req for:", req.body);
     try{
         const { text } = req.body;
         // const text = `What you can do. Subject to your compliance with these Terms, you may access and use our Services. In using our Services, you must comply with all applicable laws as well as our Sharing & Publication Policy⁠, Usage Policies⁠, and any other documentation, guidelines, or policies we make available to you.
