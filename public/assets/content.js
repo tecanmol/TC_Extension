@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
    const text = getPageText();
 
    try{
-    const response = await fetch("https://tcextension-production.up.railway.app/",{
+    const response = await fetch("https://tcextension-production.up.railway.app/api/analyze",{
       method: "POST",
       headers: {
           "Content-Type": "application/json"
@@ -13,12 +13,22 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
         body: JSON.stringify({ text })
     });
 
-     const result = await response.json();
-      console.log("Server analysis result:", result);
+    if (!response.ok) {
+         const errorData = await response.json().catch(() => ({}));
+         throw new Error(errorData.error || `Server error: ${response.status}`);
+    }
 
-       chrome.runtime.sendMessage({ action: "ANALYSIS_RESULT", data: result });
+    const result = await response.json();
+    console.log("Server analysis result:", result);
+
+    chrome.runtime.sendMessage({ action: "ANALYSIS_RESULT", data: result });
    } catch (error) {
       console.error("Error contacting server:", error);
+
+      chrome.runtime.sendMessage({ 
+          action: "ANALYSIS_ERROR", 
+          error: error.message || "Failed to connect to the server." 
+      });
     }
   }
 });

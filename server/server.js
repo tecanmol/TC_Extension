@@ -39,12 +39,19 @@ app.post('/api/analyze', async(req,res) =>{
         }
 
         const prompt = `
-            You are a legal assistant designed to protect consumers. Your task is to analyze the following Terms of Service text.
+            You are an expert legal assistant focused on consumer protection. Your task is to deeply analyze the following Terms of Service text and provide a highly detailed, easy-to-understand breakdown.
 
-            1. Provide a 3-sentence summary of what the service does.
-            2. Extract 'Red Flags': Clauses that are unusually unfair, such as selling data to 3rd parties, binding arbitration (no court), or aggressive cancellation fees.
-            3. Extract 'Good Stuff': User-friendly terms.
-            4. Return the answer in strict JSON format: { "summary": string, "red_flags": string[], "good_points": string[] }.
+            Instructions:
+            1. Summary: Write a comprehensive paragraph (4-6 sentences) explaining exactly what the service is, the core rules the user must follow, and any significant rights they are giving up.
+            2. Red Flags: Extract unusually unfair or risky clauses (e.g., selling data, binding arbitration, IP forfeiture). Do not just list them—for each red flag, write a detailed sentence explaining exactly WHAT the clause is and WHY it is dangerous or unfair to the user.
+            3. Good Points: Extract user-friendly terms (e.g., strict data privacy, fair refund policies). Explain in detail why each point specifically benefits the user.
+            
+            CRITICAL REQUIREMENT: Return the output in STRICT JSON format exactly matching this structure. Do not include any text, markdown, or commentary outside of this JSON object:
+            { 
+              "summary": "Your detailed paragraph here...", 
+              "red_flags": ["Detailed explanation 1...", "Detailed explanation 2..."], 
+              "good_points": ["Detailed explanation 1...", "Detailed explanation 2..."] 
+            }
 
             Text to analyze:
             ${text}

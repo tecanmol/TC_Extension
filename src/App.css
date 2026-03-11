@@ -41,3 +41,17 @@
 .read-the-docs {
   color: #888;
 }
+
+
+/* Add this to the bottom of src/App.css */
+.error-message {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #fee2e2; /* Light red background */
+  color: #991b1b;            /* Dark red text */
+  border: 1px solid #f87171;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease-in;
+}
