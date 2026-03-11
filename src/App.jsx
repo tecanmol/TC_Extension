@@ -12,7 +12,7 @@ function App() {
   const handleAnalyze = () => {
    setIsLoading(true);
    setAnalysis(null); 
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.tabs.sendMessage(tabs[0].id, { action: "RUN_ANALYZE" });
   });
 };

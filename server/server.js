@@ -11,6 +11,13 @@ const app = express()
 app.use(cors());
 app.use(express.json());
 
+// --- Global Request Logger Middleware ---
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} request to ${req.url}`);
+    next();
+});
+// ----------------------------------------
+
 if (!process.env.API_KEY) {
     console.error("Missing OpenRouter API key");
     process.exit(1);
@@ -21,18 +28,11 @@ const openrouter   = new OpenRouter({
 });
 
 app.post('/api/analyze', async(req,res) =>{
-    console.log("Received Req for:", req.body);
+    // Truncating the body log so it doesn't flood your Railway logs with 120k characters
+    console.log("Received Req to analyze text. Text length:", req.body?.text?.length || 0);
+    
     try{
         const { text } = req.body;
-        // const text = `What you can do. Subject to your compliance with these Terms, you may access and use our Services. In using our Services, you must comply with all applicable laws as well as our Sharing & Publication Policy⁠, Usage Policies⁠, and any other documentation, guidelines, or policies we make available to you.
-        //             What you cannot do. You may not use our Services for any illegal, harmful, or abusive activity. For example, you may not:
-        //             Use our Services in a way that infringes, misappropriates or violates anyone’s rights.
-        //             Modify, copy, lease, sell or distribute any of our Services.
-        //             Attempt to or assist anyone to reverse engineer, decompile or discover the source code or underlying components of our Services, including our models, algorithms, or systems (except to the extent this restriction is prohibited by applicable law).
-        //             Automatically or programmatically extract data or Output (defined below).
-        //             Represent that Output was human-generated when it was not.
-        //             Interfere with or disrupt our Services, including circumvent any rate limits or restrictions or bypass any protective measures or safety mitigations we put on our Services.
-        //             Use Output to develop models that compete with OpenAI.`
 
         if (!text) {
             return res.status(400).json({ error: 'No text provided' });
@@ -63,6 +63,7 @@ app.post('/api/analyze', async(req,res) =>{
         // 2. CLEANUP: Remove Markdown (```json ... ```) 
         // AI often wraps JSON in markdown code blocks. We must strip them.
         const cleanContent = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
+        
         // 3. PARSE: Convert string to actual JSON object
         try {
             const jsonObject = JSON.parse(cleanContent);
@@ -81,5 +82,5 @@ app.post('/api/analyze', async(req,res) =>{
 })
 
 app.listen(port,()=>{
-    console.log("http://localhost:3000")
+    console.log(`Server is running on port ${port}`)
 })

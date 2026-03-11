@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
    const text = getPageText();
 
    try{
-    const response = await fetch("http://localhost:3000/api/analyze",{
+    const response = await fetch("https://tcextension-production.up.railway.app/",{
       method: "POST",
       headers: {
           "Content-Type": "application/json"
