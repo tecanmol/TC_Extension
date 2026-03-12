@@ -47,7 +47,7 @@ function getPageText(){
 
     let textContent = clone.innerText.trim();
 
-    const MAX_CHARS = 120000;
+    const MAX_CHARS = 80000;
     if (textContent.length > MAX_CHARS) {
       textContent = textContent.substring(0, MAX_CHARS);
       console.warn("Text truncated to fit API limits.");
