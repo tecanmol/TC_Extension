@@ -1,38 +1,99 @@
-# 📘 T&C Guardian — Chrome Extension
+# 📘 T&C Guardian — AI Terms & Conditions Analyzer (Chrome Extension)
 
-Analyze any website's **Terms & Conditions** automatically using AI.
+**T&C Guardian** is a Chrome extension that automatically analyzes a website’s **Terms & Conditions** using AI and highlights important information such as:
 
-This Chrome extension extracts text from the current webpage, sends it to a local AI-powered backend, and displays:
+- 📝 **Summary of the agreement**
+- 🚩 **Potentially unfair or risky clauses**
+- ✅ **User-friendly policies**
 
-* 📝 **Summary**
-* 🚩 **Red Flags** (unfair clauses)
-* ✅ **Good Points**
-
-...all in a clean UI built with React + Vite.
+The extension extracts text from the current webpage, sends it to an **AI-powered backend**, and displays a structured analysis directly inside the extension popup.
 
 ---
 
-## 🚀 Features
+# ✨ Features
 
-* 🔍 **Extracts webpage content** (from `<main>` / `<article>` / `body`)
-* 🤖 **AI-powered analysis** using the OpenRouter API (lfm-2.5-1.2b-thinking)
-* 🧹 **Cleans & limits text** before sending (max 120k chars)
-* 📦 **Chrome Manifest V3** extension
-* ⚛️ **React-based popup UI** with Tailwind + Styled Components
-* 🔄 **Loading animation + status handling**
-* 💬 **Background → Content → Popup messaging system**
+## 🔍 Smart Content Extraction
+
+Automatically extracts relevant text from:
+
+- `<main>`
+- `<article>`
+- `<body>`
+
+Removes unnecessary tags such as:
+
+```
+script
+style
+nav
+footer
+iframe
+noscript
+```
 
 ---
 
-## 🗂️ Project Structure
+## 🤖 AI-Powered Legal Analysis
+
+Uses **OpenRouter AI** to analyze Terms & Conditions and generate:
+
+- Clear **human-readable summary**
+- Detailed **red flags**
+- Helpful **good points**
+
+Model used:
+
+```
+liquid/lfm-2.5-1.2b-thinking:free
+```
+
+---
+
+## ⚡ Clean UI Built with React
+
+Popup interface built using:
+
+- React 19
+- Vite
+- TailwindCSS
+- Styled Components
+
+Includes:
+
+- Loading animation
+- Error handling
+- Structured results display
+
+---
+
+## 🔄 Chrome Extension Messaging Architecture
+
+Communication flow:
+
+```
+Popup (React UI)
+      ↓
+Content Script
+      ↓
+Backend API
+      ↓
+OpenRouter AI
+      ↓
+Popup UI Result Display
+```
+
+---
+
+# 🏗️ Project Architecture
 
 ```
 tecanmol-tc_extension/
-│── README.md
-│── eslint.config.js
-│── index.html
-│── package.json
-│── vite.config.js
+│
+├── README.md
+├── package.json
+├── vite.config.js
+├── index.html
+├── eslint.config.js
 │
 ├── public/
 │   ├── manifest.json
@@ -41,13 +102,14 @@ tecanmol-tc_extension/
 │       └── content.js
 │
 ├── server/
+│   ├── package.json
 │   └── server.js
 │
 └── src/
     ├── App.jsx
+    ├── main.jsx
     ├── App.css
     ├── index.css
-    ├── main.jsx
     └── components/
         ├── AnalysisDisplay.jsx
         ├── AnalysisDisplay.css
@@ -57,58 +119,96 @@ tecanmol-tc_extension/
 
 ---
 
-## 🖥️ How It Works (Architecture)
+# ⚙️ How It Works
 
-### **1️⃣ User clicks "Analyze" in popup**
+## 1️⃣ User clicks **Analyze**
 
-Popup → sends message to content script:
+Inside the popup UI:
 
-```js
+```javascript
 chrome.tabs.sendMessage(tabId, { action: "RUN_ANALYZE" });
 ```
 
 ---
 
-### **2️⃣ Content script extracts text**
+## 2️⃣ Content Script Extracts Webpage Text
 
-Removes unwanted tags (script, style, nav, footer, iframe…)
-Truncates long text to 120k chars.
+The extension:
 
-Then it sends the text to your backend:
+- Finds the main content area
+- Removes unwanted HTML tags
+- Extracts clean readable text
+
+Maximum allowed length:
 
 ```
-fetch("http://localhost:3000/api/analyze")
+80,000 characters
 ```
 
 ---
 
-### **3️⃣ Backend (Node.js) calls OpenRouter AI**
+## 3️⃣ Text Sent to Backend API
 
-Model: `liquid/lfm-2.5-1.2b-thinking:free`
+The extracted text is sent to the server:
 
-Returns strict JSON:
+```
+POST /api/analyze
+```
+
+Example request:
 
 ```json
-{ "summary": "...", "red_flags": [], "good_points": [] }
+{
+  "text": "Website terms and conditions text..."
+}
 ```
 
 ---
 
-### **4️⃣ Popup UI updates**
+## 4️⃣ Backend Sends Prompt to AI
 
-React receives `ANALYSIS_RESULT` → displays:
+The backend:
 
-* Summary
-* Red Flags
-* Good Points
+1. Receives page text
+2. Sends prompt to OpenRouter
+3. Requests structured JSON response
 
-Each with styling + animations.
+Expected format:
+
+```json
+{
+  "summary": "Explanation of the service",
+  "red_flags": ["Potential risks"],
+  "good_points": ["User friendly clauses"]
+}
+```
 
 ---
 
-## ⚙️ Installation & Setup
+## 5️⃣ Extension Displays Results
 
-### **1️⃣ Install dependencies**
+The popup UI displays:
+
+- Summary section
+- Red flags list
+- Good points list
+
+Each section uses **visual indicators and badges** for clarity.
+
+---
+
+# 🚀 Installation & Setup
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/tc-extension.git
+cd tc-extension
+```
+
+---
+
+## 2️⃣ Install Dependencies
 
 ```bash
 npm install
@@ -116,9 +216,15 @@ npm install
 
 ---
 
-### **2️⃣ Add your OpenRouter API key**
+## 3️⃣ Setup Backend Environment
 
-Create a `.env` file inside `/server`:
+Create a `.env` file inside the `server` folder.
+
+```
+server/.env
+```
+
+Add your **OpenRouter API key**:
 
 ```
 API_KEY=your_openrouter_api_key_here
@@ -126,14 +232,14 @@ API_KEY=your_openrouter_api_key_here
 
 ---
 
-### **3️⃣ Start the backend**
+## 4️⃣ Start the Backend Server
 
 ```bash
 cd server
 node server.js
 ```
 
-Runs at:
+Server will run at:
 
 ```
 http://localhost:3000
@@ -141,7 +247,9 @@ http://localhost:3000
 
 ---
 
-### **4️⃣ Start the React popup UI**
+## 5️⃣ Run the React Extension UI
+
+From the root folder:
 
 ```bash
 npm run dev
@@ -149,80 +257,151 @@ npm run dev
 
 ---
 
-### **5️⃣ Load the Chrome extension**
+## 6️⃣ Load Extension in Chrome
 
-1. Open **chrome://extensions**
+1. Open:
+
+```
+chrome://extensions
+```
+
 2. Enable **Developer Mode**
+
 3. Click **Load unpacked**
-4. Select the project folder (`tecanmol-tc_extension`)
 
-**Your extension is now ready!**
+4. Select the project folder:
 
----
+```
+tecanmol-tc_extension
+```
 
-## 🛠️ Tech Stack
-
-### **Frontend**
-
-* React 19
-* TailwindCSS
-* Styled Components
-* Vite
-* Chrome Extension Manifest V3
-
-### **Backend**
-
-* Node.js (Express)
-* OpenRouter SDK
-* CORS
-* Dotenv
+Your extension is now installed.
 
 ---
 
-## 🔧 Scripts
+# 🛠️ Tech Stack
 
-| Command           | Description              |
-| ----------------- | ------------------------ |
-| `npm run dev`     | Start Vite dev server    |
-| `npm run build`   | Build extension UI       |
-| `npm run preview` | Preview production build |
-| `npm run lint`    | Run ESLint               |
+## Frontend
+
+- React 19
+- Vite
+- TailwindCSS
+- Styled Components
+- Chrome Extension Manifest V3
 
 ---
 
-## 🧪 API Response Format
+## Backend
 
-The backend always returns:
+- Node.js
+- Express
+- OpenRouter AI SDK
+- Dotenv
+- CORS
+
+---
+
+# 📡 API Specification
+
+### Endpoint
+
+```
+POST /api/analyze
+```
+
+---
+
+### Request Body
 
 ```json
 {
-  "summary": "string",
-  "red_flags": ["string", "string"],
-  "good_points": ["string", "string"]
+  "text": "Extracted webpage text"
 }
 ```
 
-The popup parses and displays this safely.
+---
+
+### Response Format
+
+```json
+{
+  "summary": "Detailed summary",
+  "red_flags": [
+    "Risk explanation"
+  ],
+  "good_points": [
+    "User benefit explanation"
+  ]
+}
+```
 
 ---
 
-## 🤝 Contributing
+# 📜 Available Scripts
 
-Pull requests are welcome!
-If you want to improve the:
-
-* UI/UX
-* Content extraction logic
-* Model prompt
-* Performance
-* Error handling
-
-Feel free to contribute.
+| Command | Description |
+|-------|-------------|
+| `npm run dev` | Start Vite development server |
+| `npm run build` | Build production extension |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm run server` | Run backend with auto reload |
+| `npm start` | Start backend server |
 
 ---
 
-## 📄 License
+# ⚠️ Important Notes
 
-MIT License.
+### Text Length Limit
+
+The extension limits extracted content to:
+
+```
+80,000 characters
+```
+
+This prevents API overload and improves performance.
 
 ---
+
+### AI JSON Cleanup
+
+AI responses may contain markdown formatting such as:
+
+```json
+{ ... }
+```
+
+The backend automatically **removes markdown wrappers** before parsing.
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Possible improvements:
+
+- Better webpage content detection
+- Improved AI prompt engineering
+- Performance optimization
+- UI/UX improvements
+- Multi-language support
+- Chrome Web Store deployment
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+# ⭐ Support the Project
+
+If you found this project useful:
+
+⭐ Star the repository  
+🍴 Fork it  
+🛠 Contribute improvements
+
